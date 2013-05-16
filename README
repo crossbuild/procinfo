@@ -1,0 +1,33 @@
+Welcome to procinfo 18!
+
+Procinfo is a small program that gathers some system information from
+diverse files under /proc and prints it to the screen. It duplicates some of
+the functionality of free(1) and uptime(1). It should work with any kernel
+release close to 1.0 or later up to the latest development kernel. (Well, I
+haven't actually tried 1.0 for years, but you get the idea.)
+
+Lsdev is a Perl script that attempts to tabulate DMA, IRQ and I/O port
+allocation per kernel driver.
+
+Socklist is a Perl script that gives you a list of all open sockets,
+enumerating types, port, inode, uid, pid, fd and the program to which
+it belongs. Contributed by Larry Doolittle <ldoolitt@jlab.org>.
+
+A list of changes for this and older versions of this package can be found
+in the file CHANGES.
+
+If you have any problems running procinfo under older kernels (from
+1.0 onwards), don't hesitate to mail me about it. The code may be an
+unsightly mess which should have been re-written from scratch ages ago
+if I had thought it worth the effort, but at least we can pride
+ourselves on staunchly sticking to backwards compatibility beyond your
+wildest dreams.
+
+Thanks to everyone who send bug reports/fixes, commentary, etc.
+
+
+Have fun,
+
+Sander van Malssen
+
+svm@kozmix.cistron.nl -- http://www.cistron.nl/~svm/

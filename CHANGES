@@ -1,0 +1,392 @@
+* New in version 18 (2001-03-02):
+=================================
+
+Right, finally a new release of procinfo.
+
+This release has a number of bugfixes, but I'm pretty sure I've lost
+some and introduced some new ones along the way, for which my apologies.
+This release is primarily to get a new baseline out for making patches
+against, and to fix an annoying 2.4 incompatibility. I wouldn't start
+sticking it into distributions just yet if I were you...
+
+  + Disk stats are back again for 2.4 kernels. (Well, some of them. The
+    kernel only keeps track of stats for block devices up to no. 16 or so,
+    which for example excludes the second IDE controller, which sits at
+    major number 22.)
+
+  + Fix for Redhat Bugzilla bug 17391 (when uptime gets too high, procinfo
+    displays 0.0% cpu related times) by Jon Lewis <jlewis@lewis.org>.
+
+  + New feature: Use 'C' to temporarily zero out stats ('checkpointing'),
+    and 'R' to release the checkpoint (only makes sense in totals mode).
+
+  + Fixed a bug where procinfo would crash if run from a telnet client that
+    doesn't support the TIOCWINSZ window-size ioctl (a.k.a. the Redmond
+    Bug). (Thanks to Phil Winans <phil@jtsmith.com> for the bug report.)
+
+  + New option -r adds a "-/+ buffers/cache:" line to the memory info bit,
+    just like free(1) does.
+
+  + Pressing space in full-screen mode now freezes the display until you
+    press a key again.
+
+  + Fixed a some non-Intel and/or SMP bugs (thanks to David Landgren
+    <david@landgren.net>, michaelkjohnson <johnsonm@redhat.com>,Bernhard
+    Rosenkraenzer <bero@redhat.de> and Chris Lumens <chris@slackware.com>).
+    Folks, there's really no need for this kind of bugs to pass me by
+    completely unnoticed if you all would just get together and donate me
+    some 8-way Alphas or UltraSparcs, you know.
+
+
+* New in version 17 (1999-05-16):
+=================================
+
+  + Sparc fixlet from RedHat (Jeff Johnson <jbj@redhat.com>). If you have a
+    non-Intel-Alpha-Sparc Linux box and you know that timer interrupts are
+    generated on some specific IRQ line, let me know.
+
+  + Options -s (not that it is actually all that useful) went missing a
+    while ago but is back again (David <djhill@ameritech.net>).
+
+  + Internal cleanup of the irq stuff. (Should've done that ages ago, the
+    code is noticeably cleaner now.) This also fixes a bug along the way
+    where the context switch value would be clobbered over by the irq code.
+
+  + Some minor tweaks to the procinfo manual page.
+
+  + CPU percentages should work OK on SMP boxes now -- user + nice + system
+    + idle now adds up to 100%, regardless of the number of CPU's (thanks to
+    Chris Adams <cadams@ro.com> for reporting and testing). Since we had to
+    start counting the number of CPUs anyway, procinfo now prints the number
+    of CPU's on the top line.
+
+  + Fixed lossage when you run procinfo full-screen in combination with -F
+    or with redirection (thanks to Manfred Lemke <lema0019@fh-karlsruhe.de>
+    for noting this).
+
+  + Fixed display of modules, devices and filesystems in combination with
+    odd screen sizes.
+
+
+* New in version 16 (1998-12-31):
+=================================
+
+  + Hopefully made thing saner w.r.t. handling of large numbers of
+    interrupts.
+
+  + Fixed a problem with interrupts on SMP boxen (noted by dth). Note that
+    procinfo will only display values for the first CPU.
+
+
+* New in version 15 (1998-07-04):
+=================================
+
+  + Fixed IRQ bug introduced in version 14. Thanks to Samel Vitezslav
+    <xsamel00@dcse.fee.vutbr.cz>, and Evgeni A. Nurminski
+    <nurmi@ipm.marine.su>.
+
+  + lsdev parses /proc/interrupts properly again. Since I fixed this by
+    *simplifying* things I have the lingering suspicion I might have broken
+    something somewhere else again, but it seems to work with 2.0.33 and
+    2.1.103.  Thanks to Samel Vitezslav for letting me know.
+
+
+* New in version 14 (1998-05-24):
+=================================
+
+  + Forgot to freopen stdin and stderr as well as stdout when using -F,
+    leading to funny things in full-screen mode. Fixed.
+
+  + Appearantly there are some SMP motherboard out there that can handle 24
+    IRQ's instead of 16. Fixed, and also to make sure that things still fit
+    inside 80x24, procinfo now squeezes the IRQ list by default. The -i
+    option now unsqueezes the display. (Thank you Edwin Huffstutler
+    <edwinh@computer.org>.)
+
+
+* New in version 13 (1998-03-07):
+=================================
+
+  + Procinfo's gone interactive! :-) Pressing 'q' when running full-screen
+    exits, pressing 'd' toggles between what the -d option does, etc. etc.
+    etc. etc. etc.
+
+  + Fixes for Linux/Alpha, relating to the obscene number of IRQ's on that
+    platform. To make it possible to keep running procinfo full-screen on a
+    80x24 terminal on Alphas, I've added an option -i that squeezes the IRQ
+    portion of the display by only printing IRQ's that have either a label
+    or a non-zero interrupt count. It's not guaranteed to work if you really
+    *have* a lot of IRQ's allocated, of course, but you can't have
+    everything.
+
+  + Fixed a not-zero-terminated bug and a driver-name-starts-with-digit bug,
+    both in the interrupts handling, both thanks to Johan Lindh
+    <sirreal@warrior.net>.
+
+  + Added a short manpage for socklist.
+
+  + Signal handling cleaned up. This incidentally fixes a bug with
+    suspending a procinfo compiled with glibc2, which I had brilliantly
+    predicted way back when I wrote version 0.1 in 1994, long before I'd
+    even *heard* of glibc2. Clever, huh?
+
+
+* New in version 12 (1998-01-21):
+=================================
+
+  + New utility! Written by Larry Doolittle <ldoolitt@jlab.org>. Socklist
+    gives you a list of all open sockets, enumerating types, port, inode,
+    uid, pid, fd and the program to which it belongs. Thanks Larry!
+
+  + With -d or -D and update intervals other than one second, the values
+    displayed are once more the numbers of IRQ ticks, etc. per interval,
+    rather than averaged out per second. To get the old behaviour back, use
+    the new -S option.
+
+  + Bugfixes for Alphas (Thomas Bogendoerfer <tsbogend@alpha.franken.de>).
+
+  + Forgot to keep the modules stuff compatible with 2.0.x. Thank you
+    <soneill@netaxs.com> and Marty Leisner <leisner@sdsp.mc.xerox.com>.
+
+  + Yet more make_version tweaks in order to survive the advent of egcs.
+
+  + Should survive (not necessarily prettily) impossible values from /proc
+    when jiffies wraparound has occurred, and, incredibly, still work on SMP
+    boxen as well. Please report if any bugs remain. Thanks to Jon Lewis
+    <jlewis@inorganic5.fdt.net>.
+
+  + New non-numerical entries in /proc/interrupts (NMI, IPI) could cause
+    confusion (J. Alan Eldridge <alane@wozzle.dialup.access.net>).
+
+  + Only require $TERM if really necessary. This makes `rsh <host> procinfo'
+    work.
+
+  + Dropped the "0." from the version number. I mean, what's the point?
+
+  + Fixed /proc/interrupts breakage with 2.1.80. For simplicity's sake I've
+    dropped the '+' indicating a fast irq handler -- it's not there in
+    2.1.80 anyway.
+
+
+* New in version 0.11 (1997-05-28):
+===================================
+
+  + Memory usage won't break on 2.1.41 and later.
+
+  + The status line should be able to deal better with kernels
+    compiled with gcc snapshots, i.e. where /proc/version has
+    something like "(gcc driver version x snapshot y executing gcc
+    version z)". I don't know if the current code can live with all
+    variations on this theme though.
+
+  + The occasional bug fix I've forgotten about by now.
+
+
+* New in version 0.10 (1996-09-15):
+===================================
+
+  + Made parsing of /proc/interrupts a bit more flexible (its format
+    changed a little in late 2.0.x kernels).
+
+  + Now runs if you don't have module support compiled in. Thanks both
+    to Rob Hooft <Rob.Hooft@EMBL-Heidelberg.de> and Andrew Pam
+    <avatar@glasswings.com.au> for pointing this one out.
+
+  + Buglet in make_version() fixed.
+
+  + Very silly buglet with IRQ labels fixed (thanks to Harald Anlauf
+    <anlauf@crunch.ikp.physik.th-darmstadt.de>).
+
+
+* New in version 0.9 (1996-04-28):
+==================================
+
+  + Fixed a problem with memory info not getting updated.
+
+  + Fixed a problem with include files for recent versions of libc.
+
+  + Added lsdev, a proglet that combines IRQ, DMA and I/O port
+    information into one list. (There wasn't room left on the screen
+    for I/O ports in procinfo itself, hence this perl script.) Note
+    that this doesn't always work because some drivers use different
+    labels in different files for the same hardware.
+
+  + The header line should now always fit on one screen line -- run
+    procinfo in an xterm, resize its width a few time and see the
+    magic! :-) It defaults to 80 characters if stdout isn't a
+    terminal.
+
+
+* New in version 0.8 (1996-01-05):
+==================================
+
+  + If your kernel has /proc/cmdline, its contents are printed with
+    `-a' or `-m'.
+
+  + Support for the cached field in /proc/meminfo.
+
+
+
+[NOTE: any mention of kernel patches down below is obsolete for current kernels.]
+
+
+* New in version 0.7 (1995-11-22):
+==================================
+
+  + Thanks to Marcel J.E. Mol <marcel@duteca.et.tudelft.nl> we now
+    have the following:
+
+      - Disk info is now split in read and write io's, if you run Linux
+        1.3.43 or later or if you apply pre-1.3.43-disk_io_blk.patch to
+	the kernel.
+
+      - The update interval is now more accurate (wow, one of the TODO
+	entries is gone:-).
+
+      - Fixed usage message (-F).
+
+    I added another switch -b to procinfo. Assuming you have applied
+    the patch mentioned above, the disk read and write figures are for
+    blocks transferred with -b, or for number of requests without it.
+    I'd have done it the other way 'round, were it not for backwards
+    combatability.
+
+  + Both utilities now accept a decimal fraction with the -n option.
+
+
+* New in version 0.6 (1994-11-01):
+==================================
+
+  + If your kernel is 1.1.48 or later, the IRQ display tells you
+    which DMA channels are used by what.
+
+  + Explanation of page in/out in the manual page corrected. Thanks
+    to Henry Ware <hware@bronze.coil.com>.
+
+  + Support added for terminals with magic cookies (yes I know it's
+    1994). See the COOKIE_NOSOSE define in procinfo.c if you're
+    suffering from this.
+
+  + New option -F followed by a file or device name causes all output
+    to go to that file or device. Useful if you want to nohup procinfo
+    with the output going to a tty. Based on a patch by Steven Lembark.
+
+
+* New in version 0.5 (1994-08-12):
+==================================
+
+  + The hostname is displayed in the top right corner (as suggested
+    by Danny ter Haar). I cut off half of the /proc/version line as
+    it was getting far too long in recent kernel versions to fit on
+    one line.
+
+  + Times larger than 24 hours are now displayed as `days hh:mm:ss.ss'
+    Patch from The Big Cheese <root@delphi.glendon.yorku.ca>.
+
+  + New option `-D' to show totals on memory usage and differences
+    on the rest. Patch from Steven Lembark <lembark@wrkhors.la.ca.us>.
+
+  + If your kernel is 1.1.43 or later, you also get the names of who
+    is using the irq channels appearing and disappearing as drivers
+    grab and release irq's.
+
+
+* New in version 0.4 (1994-05-21):
+==================================
+
+  + The CPU times display was rather buggy. This has been fixed and
+    improved to display 100th of seconds. Thanks to Rob Janssen for
+    the patches.
+
+  + The various #define's have gone. procinfo now displays whatever
+    info is available. Note that info from /proc/net is still
+    missing, since I don't have the network code compiled into my
+    kernel.
+
+  + Thanks again to Rob Janssen, procinfo should now run correctly
+    with older versions of the shared libraries.
+
+  + Modules which are deleted or uninitialized and file systems
+    which require no device are now marked as such.
+
+
+* New in version 0.3 (1994-05-08):
+==================================
+
+  + Interrupts look better. Idea from Danny ter Haar
+    <danny@cistron.nl.mugnet.org>.
+
+  + A new option `-d' gives you the differences for memory,
+    pagein/out, swapin/out, disks, context and interrupts since last
+    update. Suggested by Rob Janssen <pe1chl@rabo.nl>.
+
+  + Since the advent of /proc/devices in Linux 1.1.3 and of the
+    modularized SLS 1.0.5 kernel means that not everything will fit on
+    one 80x25 screen anymore, I have introduced a new option `-m' that
+    will replace the default screen with one showing all modules (and
+    devices and filesystems if your kernel is new enough). The modules
+    list has disappeared from the default display. `-a' gives you
+    everything.
+
+  + Added percentages for CPU usage. Note that these are accumulated
+    percentages, as opposed to those given by top(1).
+
+  + To accommodate both those who use 1.0.x kernels and those who use
+    1.1.x kernels, I have re-arranged the #defines a bit. See below.
+
+
+* New in version 0.2 (1994-03-30):
+==================================
+
+  + The kernel patch broke rpc.rstatd. Fixed. Please make sure you
+    don't use an old version of procinfo with the new kernel patch or
+    vice versa.
+
+  + Wildly expanded manual page.
+
+  + A few cosmetic changes.
+
+
+  + Semi-obsolete interrupt patch.
+  ================================
+
+  As is, the `intr' line in /proc/stat under Linux 1.0 prints the
+  accumulated number of interrupts that have happened since boot-up
+  for all 16 irq channels lumped together. You can change this to
+  display the number of interrupts for each individual irq by applying
+  the patch in `kernel.patch' to the kernel sources (if necessary) and
+  then compiling procinfo with -DHAVE_IRQ_ARRAY.
+
+  If your kernel is at version 1.0.4 or older, just say
+
+  cd /usr/src/linux		(or whichever dir contains the kernel sources)
+  patch < kernel.patch
+
+  If you have version 1.0.5, then the patch is already part of the
+  standard kernel, except that there is a small bug in
+  linux/fs/proc/array.c at line 101 where it reads
+
+		"%u",
+
+  but should read
+
+		"intr %u",
+
+  Change this by hand and recompile and you should be all set.
+
+  As said above, the patch that came with procinfo 0.1 broke the
+  rpc.rstatd daemon which reads the first number form the `intr' line
+  and assumes that that line contains the total number of interrupts.
+  In this version of procinfo, the patch merely adds the sixteen extra
+  numbers *after* the original total number (rather than replacing the
+  total number *with* the sixteen extra numbers), thus retaining
+  compatibility with rpc.rstatd.
+
+
+
+
+Local variables:
+mode: text
+fill-column: 76
+rm-trailing-spaces: t
+End:
